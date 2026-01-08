@@ -20,10 +20,10 @@ function App() {
     })
     gsap.ticker.lagSmoothing(0)
     return () => {
-        gsap.ticker.remove((time) => {
-            lenis.raf(time * 1000)
-        })
-        lenis.destroy()
+      gsap.ticker.remove((time) => {
+        lenis.raf(time * 1000)
+      })
+      lenis.destroy()
     }
   }, [])
 
@@ -41,23 +41,23 @@ function App() {
           trigger: triggerRef.current,
           start: "top top",
           end: isMobile ? "+=4000" : "+=3000",
-          scrub: 2, 
+          scrub: 2,
           pin: true,
           pinSpacing: true,
         },
       });
 
-      // --- Phase 1: Shrink to Circle ---
+      // --- Phase 1: Hero -> Dashboard ---
       tl.to(maskRef.current, {
         width: isMobile ? "85vw" : "30vw",
         height: isMobile ? "85vw" : "30vw",
         borderRadius: "50%",
         scale: 0.5,
         y: isMobile ? "-30vh" : 100,
-        border: "10px solid white",
+        border: "10px solid rgba(255,255,255,0.1)", // Thinner, cleaner border
       }, "phase1")
-        .to(bgRef.current, { backgroundColor: "#3b82f6" }, "phase1")
-        .to(imageRef.current, { scale: 1.5 }, "phase1")
+        .to(bgRef.current, { backgroundColor: "#1e1b4b" }, "phase1") // Deep Indigo
+        .to(imageRef.current, { scale: 1.5, filter: "grayscale(100%)" }, "phase1") // Cool B&W effect
         .to(".hero-title", { opacity: 0, y: -100 }, "phase1")
 
       // --- Phase 2: Enter Dashboard ---
@@ -80,7 +80,7 @@ function App() {
         rotation: 10,
         scale: 0.6,
       }, "phase3")
-        .to(bgRef.current, { backgroundColor: "#18181b" }, "phase3")
+        .to(bgRef.current, { backgroundColor: "#111" }, "phase3")
         .to(".dashboard-ui", {
           opacity: 0,
           y: isMobile ? -50 : 50,
@@ -94,7 +94,7 @@ function App() {
 
       // --- Phase 4: About Exit -> Work Enter ---
       tl.to(maskRef.current, { scale: 50, duration: 1 }, "phase4")
-        .to(bgRef.current, { backgroundColor: "#000000" }, "phase4")
+        .to(bgRef.current, { backgroundColor: "#000" }, "phase4")
         .to(".about-ui", {
           opacity: 0,
           y: 50,
@@ -112,44 +112,68 @@ function App() {
 
   return (
     <>
-      <main className="relative w-full bg-black text-white">
+      <main className="relative w-full bg-black text-white font-sans selection:bg-blue-500 selection:text-white">
         <div ref={triggerRef} className="h-screen w-full relative overflow-hidden">
 
           {/* Layer 1: Background & Mask */}
-          <div ref={bgRef} className="absolute inset-0 bg-black z-0 flex items-center justify-center">
-            <div ref={maskRef} className="w-full h-full overflow-hidden relative z-10 origin-center box-border">
-              <img ref={imageRef} src="/hero.png" alt="Hero" className="w-full h-full object-contain object-top origin-center scale-100" />
+          <div ref={bgRef} className="absolute inset-0 bg-black z-0 flex items-center justify-center transition-colors duration-500">
+            {/* Simple Grid Pattern for texture */}
+            <div className="absolute inset-0 opacity-20"
+              style={{ backgroundImage: 'radial-gradient(#444 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
+            </div>
+
+            <div ref={maskRef} className="w-full h-full overflow-hidden relative z-10 origin-center box-border shadow-2xl">
+              <img ref={imageRef} src="/hero.png" alt="Hero" className="w-full h-full object-contain object-top origin-center scale-100 transition-all duration-700" />
             </div>
           </div>
 
           {/* Layer 2: UI Content */}
-          <div className="hero-title absolute inset-0 flex items-center justify-center z-20 pointer-events-none p-4">
-            <h1 className="text-[12vw] md:text-[10vw] font-black uppercase leading-[0.9] text-center tracking-tighter">
-              Priyanshu <br /> Negi
+          <div className="hero-title absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none p-4 mix-blend-difference">
+            <h1 className="text-[13vw] md:text-[11vw] font-black uppercase leading-[0.8] text-center tracking-tighter">
+              Priyanshu <br /> <span className="text-transparent bg-clip-text bg-linear-to-b from-white to-gray-500">Negi</span>
             </h1>
-            <p className="absolute bottom-20 text-xl font-mono text-gray-400 tracking-widest uppercase">Full Stack Developer</p>
+            <div className="mt-8 flex items-center gap-4 animate-pulse">
+              <div className="h-px w-12 bg-white"></div>
+              <p className="text-sm md:text-xl font-mono tracking-widest uppercase">Senior Web Developer</p>
+              <div className="h-px w-12 bg-white"></div>
+            </div>
           </div>
 
           {/* DASHBOARD UI */}
           <div className="dashboard-ui opacity-0 translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-10 items-center md:justify-center md:items-end md:pr-24 md:pb-0">
             <div className="w-[90%] md:w-1/2 text-center md:text-right">
-              <h2 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 uppercase tracking-tight drop-shadow-lg">Dev Stats</h2>
+              <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase tracking-tight text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-purple-400">
+                Dev Arsenal
+              </h2>
+
               <div className="grid grid-cols-2 gap-3 md:gap-4 text-left">
-                <div className="bg-zinc-800/90 backdrop-blur-sm p-4 rounded-xl border border-zinc-700 shadow-xl">
-                  <h3 className="text-zinc-400 font-bold text-[10px] md:text-sm tracking-wider">EXP. YEARS</h3>
-                  <p className="text-2xl md:text-4xl font-mono mt-1 text-blue-400">2+</p>
+                {/* Stats Card */}
+                <div className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 hover:border-blue-500/50 transition-all group">
+                  <h3 className="text-gray-400 font-bold text-xs tracking-widest mb-2 group-hover:text-blue-400">EXPERIENCE</h3>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl md:text-4xl font-mono text-white">2+</p>
+                    <span className="text-xs text-gray-500">YEARS</span>
+                  </div>
                 </div>
-                <div className="bg-red-600/90 backdrop-blur-sm p-4 rounded-xl shadow-xl shadow-red-900/20">
-                  <h3 className="text-red-200 font-bold text-[10px] md:text-sm tracking-wider">LANGUAGES</h3>
-                  <p className="text-2xl md:text-4xl font-mono mt-1">5+</p>
+
+                {/* Rating Card */}
+                <div className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all group">
+                  <h3 className="text-gray-400 font-bold text-xs tracking-widest mb-2 group-hover:text-purple-400">TOP SKILL</h3>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-xl md:text-2xl font-bold text-white">Next.js</p>
+                    <span className="text-xs text-green-400 font-mono">★★★★</span>
+                  </div>
                 </div>
-                <div className="col-span-2 bg-white/95 backdrop-blur-sm p-4 rounded-xl text-black shadow-xl">
-                  <h3 className="text-gray-500 font-bold text-[10px] md:text-sm mb-2 tracking-wider">CORE STACK</h3>
-                  <div className="flex gap-2 text-xs md:text-lg font-bold flex-wrap justify-center md:justify-end">
-                    <span className="bg-gray-100 border border-gray-300 px-2 py-1 rounded-md">Next.js</span>
-                    <span className="bg-gray-100 border border-gray-300 px-2 py-1 rounded-md">Python</span>
-                    <span className="bg-gray-100 border border-gray-300 px-2 py-1 rounded-md">Docker</span>
-                    <span className="bg-gray-100 border border-gray-300 px-2 py-1 rounded-md">AWS</span>
+
+                {/* Stack Card */}
+                <div className="col-span-2 bg-linear-to-br from-white/10 to-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10">
+                  <h3 className="text-gray-400 font-bold text-xs tracking-widest mb-4">CORE TECHNOLOGIES</h3>
+                  <div className="flex gap-2 flex-wrap justify-center md:justify-end">
+                    {["Next.js", "Python", "Docker", "AWS", "SQL"].map((tech) => (
+                      <span key={tech} className="px-3 py-1 bg-black/50 border border-white/20 rounded-full text-xs md:text-sm font-medium hover:bg-white hover:text-black transition-colors cursor-default">
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -158,51 +182,73 @@ function App() {
 
           {/* ABOUT UI */}
           <div className="about-ui opacity-0 translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:justify-center md:items-start md:pl-24 md:pb-0">
-            <div className="w-[90%] md:w-1/2 text-center md:text-left bg-black/60 md:bg-transparent p-4 md:p-0 rounded-2xl backdrop-blur-sm">
-              <h2 className="text-4xl md:text-7xl font-black mb-4 md:mb-6 leading-tight">
-                BEHIND <span className="text-blue-500 block md:inline">THE CODE</span>
+            <div className="w-[90%] md:w-[45%] text-center md:text-left">
+              <h2 className="text-4xl md:text-7xl font-black mb-6 leading-none">
+                SIMPLIFYING <br /> <span className="text-purple-500">COMPLEXITY</span>
               </h2>
-              <p className="text-gray-200 md:text-gray-400 text-sm md:text-xl mb-6 leading-relaxed font-medium md:font-normal">
-                I specialize in building efficient back-end solutions and responsive user experiences. Currently mentoring junior developers and simplifying complex systems.
-              </p>
-              <div className="flex gap-3 justify-center md:justify-start pointer-events-auto">
-                <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="px-6 py-3 text-sm md:text-base border border-zinc-700 bg-zinc-900 text-white rounded-full hover:bg-white hover:text-black transition-all">
-                  GitHub
+
+              <div className="bg-zinc-900/80 backdrop-blur-md p-6 rounded-2xl border-l-4 border-purple-500 mb-8">
+                <p className="text-gray-300 text-sm md:text-lg leading-relaxed">
+                  "I focus on user experiences and efficient back-end solutions, thrive in collaboration, and explore new technologies for impactful results."
+                </p>
+              </div>
+
+              <div className="flex gap-4 justify-center md:justify-start pointer-events-auto">
+                <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 bg-white/5 rounded-full hover:bg-white hover:text-black transition-all group">
+                  <span>GitHub</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </a>
-                <button className="px-6 py-3 text-sm md:text-base bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/50">
-                  Resume
+                <button className="px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-purple-500 hover:text-white transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                  Download CV
                 </button>
               </div>
             </div>
           </div>
 
-          {/* WORK UI (PROJECTS) */}
+          {/* WORK UI (UPDATED WITH RESUME PROJECTS) */}
           <div className="work-ui opacity-0 translate-y-20 absolute inset-0 z-40 pointer-events-none flex flex-col items-center justify-center">
-            <h2 className="text-5xl md:text-8xl text-white mb-6 md:mb-12 uppercase font-black tracking-tighter text-center">
-              Selected <span className="text-blue-500">Works</span>
+            <p className="text-blue-500 font-mono text-sm tracking-widest mb-4 uppercase">Latest Deployments</p>
+            <h2 className="text-5xl md:text-8xl text-white mb-8 md:mb-12 uppercase font-black tracking-tighter text-center">
+              Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-purple-500">Works</span>
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 pointer-events-auto w-[90%] md:w-3/4 max-h-[60vh] overflow-y-auto md:overflow-visible p-2">
-              
-              {/* Project 1: ChatterVerse */}
-              <a href="https://chatterverse-eqjz.onrender.com" target="_blank" rel="noreferrer" className="group relative aspect-video bg-zinc-800 rounded-2xl overflow-hidden cursor-pointer border border-zinc-700 hover:border-blue-500 transition-colors shrink-0">
-                <div className="absolute inset-0 bg-blue-600/10 group-hover:bg-blue-600/0 transition-colors"></div>
-                <div className="absolute bottom-0 left-0 p-4 md:p-6">
-                  <h3 className="text-xl md:text-2xl font-bold">ChatterVerse</h3>
-                  <p className="text-gray-400 text-xs md:text-sm mt-1">Next.js + SQL + Real-time Messaging</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pointer-events-auto w-[90%] md:w-3/4 max-h-[60vh] overflow-y-auto md:overflow-visible p-2">
+
+              {/* Project 1: ChatterVerse [cite: 67] */}
+              <a href="https://chatter-verse-sage.vercel.app/" target="_blank" rel="noreferrer" className="group relative aspect-video bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-blue-500 transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] shrink-0">
+                {/* Abstract Project BG */}
+                <div className="absolute inset-0 bg-linear-to-br from-blue-900/20 to-black"></div>
+
+                <div className="absolute bottom-0 left-0 p-6 w-full bg-linear-to-t from-black to-transparent">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">ChatterVerse</h3>
+                      <p className="text-gray-400 text-sm mt-1">Next.js • SQL • Real-time Voice</p>
+                    </div>
+                    <span className="h-8 w-8 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">↗</span>
+                  </div>
                 </div>
               </a>
 
-              {/* Project 2: E-Commerce */}
-              <a href="https://ecom.svinfotechsoftwaresolutions.com/public/" target="_blank" rel="noreferrer" className="group relative aspect-video bg-zinc-800 rounded-2xl overflow-hidden cursor-pointer border border-zinc-700 hover:border-blue-500 transition-colors shrink-0">
-                <div className="absolute inset-0 bg-purple-600/10 group-hover:bg-purple-600/0 transition-colors"></div>
-                <div className="absolute bottom-0 left-0 p-4 md:p-6">
-                  <h3 className="text-xl md:text-2xl font-bold">E-Commerce Engine</h3>
-                  <p className="text-gray-400 text-xs md:text-sm mt-1">Laravel + MySQL + Secure Payments</p>
+              {/* Project 2: The Commons Voice [cite: 72] */}
+              <a href="https://thecommonsvoice.com" target="_blank" rel="noreferrer" className="group relative aspect-video bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-purple-500 transition-all hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] shrink-0">
+                {/* Abstract Project BG */}
+                <div className="absolute inset-0 bg-linear-to-br from-purple-900/20 to-black"></div>
+
+                <div className="absolute bottom-0 left-0 p-6 w-full bg-linear-to-t from-black to-transparent">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white group-hover:text-purple-400 transition-colors">The Commons Voice</h3>
+                      <p className="text-gray-400 text-sm mt-1">News Portal • SEO • Dynamic UI</p>
+                    </div>
+                    <span className="h-8 w-8 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">↗</span>
+                  </div>
                 </div>
               </a>
 
             </div>
-            <a href="https://github.com/npriyanshu?tab=repositories" target="_blank" rel="noreferrer" className="mt-6 md:mt-12 px-8 py-3 border border-white rounded-full hover:bg-white hover:text-black transition pointer-events-auto text-sm md:text-base">
+
+            <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="mt-8 px-8 py-3 bg-white/5 border border-white/20 rounded-full hover:bg-white hover:text-black transition pointer-events-auto backdrop-blur-md">
               View All Repositories
             </a>
           </div>
@@ -211,11 +257,14 @@ function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="w-full h-[50vh] bg-zinc-900 text-white flex flex-col items-center justify-center relative z-50">
-        <h2 className="text-5xl font-black mb-6">LET'S TALK</h2>
-        <p className="text-gray-400 mb-8">npriyanshu63@gmail.com</p>
-        <a href="mailto:npriyanshu63@gmail.com" className="px-8 py-3 bg-white text-black font-bold rounded-full hover:scale-105 transition">
-          Contact Me
+      <footer className="w-full h-[50vh] bg-black text-white flex flex-col items-center justify-center relative z-50 border-t border-white/10">
+        <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter text-center">
+          READY TO <span className="text-gray-500">SCALE?</span>
+        </h2>
+        <p className="text-gray-400 mb-8 font-mono">npriyanshu63@gmail.com</p>
+        <a href="mailto:npriyanshu63@gmail.com" className="group relative px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform hover:scale-105">
+          <span className="relative z-10 group-hover:text-white transition-colors">Start a Conversation</span>
+          <div className="absolute inset-0 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left ease-out duration-300"></div>
         </a>
       </footer>
     </>
