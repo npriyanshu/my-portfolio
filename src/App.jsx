@@ -13,12 +13,12 @@ function App() {
   const imageRef = useRef(null)
 
   const projects = [
-    {
-      title: "ChatterVerse",
-      subtitle: "Next.js • Real-time Voice • Prisma",
-      url: "https://chatter-verse-sage.vercel.app/",
-      color: "from-blue-600 to-cyan-500",
-      bg: "bg-zinc-900"
+     {
+      title: "BraiinyBear",
+      subtitle: "EdTech Platform • Organization",
+      url: "https://braiinybear.org",
+      color: "from-green-500 to-emerald-400",
+      bg: "bg-zinc-800"
     },
     {
       title: "The Commons Voice",
@@ -34,13 +34,14 @@ function App() {
       color: "from-orange-500 to-red-500",
       bg: "bg-zinc-900"
     },
-    {
-      title: "BraiinyBear",
-      subtitle: "EdTech Platform • Organization",
-      url: "https://braiinybear.org",
-      color: "from-green-500 to-emerald-400",
-      bg: "bg-zinc-800"
+     {
+      title: "ChatterVerse",
+      subtitle: "Next.js • Real-time Voice • Prisma",
+      url: "https://chatter-verse-sage.vercel.app/",
+      color: "from-blue-600 to-cyan-500",
+      bg: "bg-zinc-900"
     }
+   
   ]
 
   useEffect(() => {
