@@ -145,7 +145,7 @@ function App() {
       .to(".project-card", {
         y: (index) => index * (isMobile ? 40 : 60), 
         opacity: 1,
-        duration: 3, 
+        duration: 1, 
         stagger: 0, // FIX: Set to 0. All cards move together as a block.
         ease: "power2.out"
       }, "phase4_start+=0.2")
