@@ -13,7 +13,7 @@ function App() {
   const imageRef = useRef(null)
 
   const projects = [
-     {
+    {
       title: "BraiinyBear",
       subtitle: "EdTech Platform • Organization",
       url: "https://braiinybear.org",
@@ -34,28 +34,32 @@ function App() {
       color: "from-orange-500 to-red-500",
       bg: "bg-zinc-900"
     },
-     {
+    {
       title: "ChatterVerse",
       subtitle: "Next.js • Real-time Voice • Prisma",
       url: "https://chatter-verse-sage.vercel.app/",
       color: "from-blue-600 to-cyan-500",
       bg: "bg-zinc-900"
     }
-   
+
   ]
 
   useEffect(() => {
-    const lenis = new Lenis()
+    const lenis = new Lenis({
+      duration: 1.5, // Slower, smoother scroll
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Luxurious feel
+      smoothWheel: true,
+    })
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000)
     })
-    gsap.ticker.lagSmoothing(0)
+    gsap.ticker.lagSmoothing(1000, 16) // Handle frame drops gracefully
     return () => {
-        gsap.ticker.remove((time) => {
-            lenis.raf(time * 1000)
-        })
-        lenis.destroy()
+      gsap.ticker.remove((time) => {
+        lenis.raf(time * 1000)
+      })
+      lenis.destroy()
     }
   }, [])
 
@@ -72,11 +76,12 @@ function App() {
         scrollTrigger: {
           trigger: triggerRef.current,
           start: "top top",
-          end: isMobile ? "+=4500" : "+=4000", 
-          scrub: 1.5, 
+          end: isMobile ? "+=5000" : "+=4500",
+          scrub: 2,
           pin: true,
           pinSpacing: true,
         },
+        defaults: { ease: "power2.inOut" }
       });
 
       // --- Phase 1: Hero -> Dashboard ---
@@ -87,8 +92,9 @@ function App() {
         scale: 0.5,
         y: isMobile ? "-30vh" : 100,
         border: "1px solid rgba(255,255,255,0.2)",
+        ease: "power3.inOut" // Extra smooth for the main mask
       }, "phase1")
-        .to(bgRef.current, { backgroundColor: "#172554" }, "phase1") 
+        .to(bgRef.current, { backgroundColor: "#172554" }, "phase1")
         .to(imageRef.current, { scale: 1.5, filter: "grayscale(100%)" }, "phase1")
         .to(".hero-title", { opacity: 0, y: -100 }, "phase1")
 
@@ -125,33 +131,33 @@ function App() {
         }, "phase3+=0.3")
 
       // --- Phase 4: About Exit -> Work Enter ---
-      
+
       // Step A: Move About Out
       tl.to(".about-ui", { opacity: 0, y: -50, duration: 0.4 }, "phase4_start")
-      
-      // Step B: Scale Background Up
-      .to(maskRef.current, { scale: 50, duration: 1 }, "phase4_start+=0.1")
-      .to(bgRef.current, { backgroundColor: "#000000" }, "phase4_start+=0.1")
-      
-      // Step C: Reveal Works Container
-      .to(".work-ui", {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        pointerEvents: "all"
-      }, "phase4_start+=0.1")
-      
-      // Step D: Cards Animation (FIXED)
-      .to(".project-card", {
-        y: (index) => index * (isMobile ? 40 : 60), 
-        opacity: 1,
-        duration: 1, 
-        stagger: 0, // FIX: Set to 0. All cards move together as a block.
-        ease: "power2.out"
-      }, "phase4_start+=0.2")
 
-      // Step E: Padding for scroll
-      .to({}, { duration: 1 }) 
+        // Step B: Scale Background Up
+        .to(maskRef.current, { scale: 50, duration: 1 }, "phase4_start+=0.1")
+        .to(bgRef.current, { backgroundColor: "#000000" }, "phase4_start+=0.1")
+
+        // Step C: Reveal Works Container
+        .to(".work-ui", {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          pointerEvents: "all"
+        }, "phase4_start+=0.1")
+
+        // Step D: Cards Animation (FIXED)
+        .to(".project-card", {
+          y: (index) => index * (isMobile ? 40 : 60),
+          opacity: 1,
+          duration: 1,
+          stagger: 0, // FIX: Set to 0. All cards move together as a block.
+          ease: "power2.out"
+        }, "phase4_start+=0.2")
+
+        // Step E: Padding for scroll
+        .to({}, { duration: 1 })
     });
 
   }, [])
@@ -163,25 +169,25 @@ function App() {
 
           {/* Layer 1: Background & Mask */}
           <div ref={bgRef} className="absolute inset-0 bg-black z-0 flex items-center justify-center">
-             <div className="absolute inset-0 opacity-20" 
-                  style={{ backgroundImage: 'radial-gradient(#444 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-             </div>
-             <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-transparent via-transparent to-black/80"></div>
+            <div className="absolute inset-0 opacity-20"
+              style={{ backgroundImage: 'radial-gradient(#444 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+            </div>
+            <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-transparent via-transparent to-black/80"></div>
 
-            <div ref={maskRef} className="w-full h-full overflow-hidden relative z-10 origin-center box-border shadow-2xl">
+            <div ref={maskRef} className="w-full h-full overflow-hidden relative z-10 origin-center box-border shadow-2xl will-change-transform">
               <img ref={imageRef} src="/hero.png" alt="Hero" className="w-full h-full object-contain object-top origin-center scale-100" />
             </div>
           </div>
 
           {/* Layer 2: UI Content */}
-          <div className="hero-title absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none p-4 mix-blend-screen">
+          <div className="hero-title absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none p-4 mix-blend-screen will-change-transform">
             <h1 className="text-[13vw] md:text-[11vw] font-black uppercase leading-[0.8] text-center tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-gray-600 drop-shadow-lg">
               Priyanshu <br /> Negi
             </h1>
             <div className="mt-8 flex items-center gap-4">
-                <div className="h-px w-8 md:w-16 bg-linear-to-r from-transparent to-white"></div>
-                <p className="text-xs md:text-xl font-mono tracking-[0.2em] text-blue-200 uppercase glow-text">Full Stack Engineer</p>
-                <div className="h-px w-8 md:w-16 bg-linear-to-l from-transparent to-white"></div>
+              <div className="h-px w-8 md:w-16 bg-linear-to-r from-transparent to-white"></div>
+              <p className="text-xs md:text-xl font-mono tracking-[0.2em] text-blue-200 uppercase glow-text">Full Stack Engineer</p>
+              <div className="h-px w-8 md:w-16 bg-linear-to-l from-transparent to-white"></div>
             </div>
           </div>
 
@@ -210,9 +216,9 @@ function App() {
                   <h3 className="text-gray-400 font-bold text-xs tracking-widest mb-4">CORE STACK</h3>
                   <div className="flex gap-2 flex-wrap justify-center md:justify-end">
                     {["Next.js", "Node.js", "NestJS", "Prisma", "Docker", "AWS"].map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-black/40 border border-white/10 rounded-full text-xs md:text-sm text-gray-200">
-                            {tech}
-                        </span>
+                      <span key={tech} className="px-3 py-1 bg-black/40 border border-white/10 rounded-full text-xs md:text-sm text-gray-200">
+                        {tech}
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -224,12 +230,12 @@ function App() {
           <div className="about-ui opacity-0 translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:justify-center md:items-start md:pl-24 md:pb-0">
             <div className="w-[90%] md:w-[45%] text-center md:text-left bg-black/40 md:bg-transparent p-6 rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
               <h2 className="text-4xl md:text-7xl font-black mb-6 leading-none">
-                SIMPLIFYING <br/> <span className="text-indigo-500">COMPLEXITY</span>
+                SIMPLIFYING <br /> <span className="text-indigo-500">COMPLEXITY</span>
               </h2>
               <div className="pl-4 border-l-2 border-indigo-500 mb-8">
-                  <p className="text-gray-300 text-sm md:text-lg leading-relaxed">
-                    "I focus on user experiences and efficient back-end solutions, thrive in collaboration, and explore new technologies for impactful results."
-                  </p>
+                <p className="text-gray-300 text-sm md:text-lg leading-relaxed">
+                  "I focus on user experiences and efficient back-end solutions, thrive in collaboration, and explore new technologies for impactful results."
+                </p>
               </div>
               <div className="flex gap-4 justify-center md:justify-start pointer-events-auto">
                 <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-6 py-3 border border-white/20 bg-white/5 rounded-full hover:bg-white hover:text-black transition-all group">
@@ -245,30 +251,30 @@ function App() {
 
           {/* SELECTED WORKS */}
           <div className="work-ui opacity-0 absolute inset-0 z-40 pointer-events-none flex flex-col items-center justify-between py-12 md:py-20 h-full">
-            
+
             <h2 className="text-4xl md:text-7xl text-white uppercase font-black tracking-tighter text-center shrink-0">
               Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-indigo-500">Works</span>
             </h2>
-            
+
             <div className="relative w-[90%] md:w-[600px] grow flex items-center justify-center pointer-events-auto">
-              
+
               <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center">
                 {projects.map((project, index) => (
-                  <a 
+                  <a
                     key={index}
-                    href={project.url} 
-                    target="_blank" 
-                    rel="noreferrer" 
+                    href={project.url}
+                    target="_blank"
+                    rel="noreferrer"
                     className={`project-card absolute top-0 left-0 w-full h-[250px] md:h-[300px] rounded-3xl border border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.8)] p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-4 hover:shadow-blue-500/20 cursor-pointer translate-y-[150vh] ${project.bg}`}
                     style={{
-                      zIndex: index + 10, 
+                      zIndex: index + 10,
                     }}
                   >
                     <div className={`absolute top-0 left-0 w-full h-1 bg-linear-to-r ${project.color}`}></div>
                     <div className="flex justify-between items-start">
                       <div>
-                          <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
-                          <p className="text-gray-400 font-mono text-sm">{project.subtitle}</p>
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
+                        <p className="text-gray-400 font-mono text-sm">{project.subtitle}</p>
                       </div>
                       <span className="bg-white/10 p-3 rounded-full text-white">↗</span>
                     </div>
@@ -282,7 +288,7 @@ function App() {
               </div>
 
             </div>
-            
+
             <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="text-sm text-gray-500 hover:text-white border-b border-transparent hover:border-white transition-colors pointer-events-auto shrink-0 mt-4">
               View All Projects on GitHub
             </a>
@@ -293,7 +299,7 @@ function App() {
 
       <footer className="w-full h-[50vh] bg-black text-white flex flex-col items-center justify-center relative z-50 border-t border-white/10">
         <h2 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter text-center opacity-30 hover:opacity-100 transition-opacity cursor-default">
-            LET'S BUILD
+          LET'S BUILD
         </h2>
         <p className="text-gray-400 mb-8 font-mono">npriyanshu63@gmail.com</p>
         <a href="mailto:npriyanshu63@gmail.com" className="group relative px-10 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform hover:scale-110">
