@@ -35,6 +35,7 @@ function App() {
   const maskRef = useRef(null)
   const imageRef = useRef(null)
   const orbsRef = useRef(null)
+  const workContainerRef = useRef(null) // NEW: Ref for the horizontal container
 
   const projects = [
     {
@@ -68,7 +69,7 @@ function App() {
   ]
 
   useEffect(() => {
-    // --- PHYSICS CONFIGURATION ---
+    // --- PHYSICS CONFIGURATION (PRESERVED) ---
     const lenis = new Lenis({
       duration: 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -119,7 +120,8 @@ function App() {
         scrollTrigger: {
           trigger: triggerRef.current,
           start: "top top",
-          end: isMobile ? "+=5000" : "+=4500",
+          // TWEAK: Increased distance to accommodate horizontal scrolling
+          end: isMobile ? "+=6000" : "+=7000", 
           scrub: 2, 
           pin: true,
           pinSpacing: true,
@@ -179,31 +181,37 @@ function App() {
           duration: 0.8
         }, "phase3+=0.3")
 
-      // --- Phase 4: About Exit -> Work Enter ---
+      // --- Phase 4: About Exit -> Work Enter (HORIZONTAL SCROLL) ---
       tl.to(".about-ui", { autoAlpha: 0, y: -50, duration: 0.4 }, "phase4_start")
+        // Scale BG up to black
         .to(maskRef.current, { scale: 50, duration: 1 }, "phase4_start+=0.1")
         .to(bgRef.current, { backgroundColor: "#000000" }, "phase4_start+=0.1")
+        
+        // Show Work UI container
         .to(".work-ui", {
           autoAlpha: 1,
           y: 0,
           duration: 0.5,
           pointerEvents: "all"
         }, "phase4_start+=0.1")
-        .to(".project-card-container", { 
-          y: (index) => index * (isMobile ? 40 : 60),
-          autoAlpha: 1,
-          duration: 1,
-          stagger: 0.1, 
-          ease: "power2.out"
-        }, "phase4_start+=0.2")
-        .to({}, { duration: 1 })
+
+        // Animate the Horizontal Scroll
+        .fromTo(workContainerRef.current, 
+            { x: isMobile ? "10vw" : "0vw" }, // Start slightly visible or centered
+            { 
+              // Move left by a percentage to reveal hidden cards
+              // On mobile we need to scroll further because cards are wider relative to screen
+              x: isMobile ? "-300vw" : "-160vw", 
+              duration: 4, // Longer duration = feels like a real scroll
+              ease: "none" // Linear ease for scrolling feel
+            }, 
+        "phase4_start+=0.5") // Start slightly after it appears
     });
 
   }, [])
 
   return (
     <>
-      {/* Import Editorial Font ONLY (Cursor styles removed) */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
         .font-editorial { font-family: "Playfair Display", serif; font-style: italic; }
@@ -283,7 +291,7 @@ function App() {
             </div>
           </div>
 
-          {/* ABOUT UI - EDITORIAL FONT KEPT */}
+          {/* ABOUT UI */}
           <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:justify-center md:items-start md:pl-24 md:pb-0">
             <div className="w-[90%] md:w-[45%] text-center md:text-left bg-black/40 md:bg-transparent p-6 rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
               <h2 className="text-4xl md:text-7xl font-black mb-6 leading-none">
@@ -306,47 +314,51 @@ function App() {
             </div>
           </div>
 
-          {/* SELECTED WORKS - EDITORIAL FONT KEPT */}
-          <div className="work-ui opacity-0 invisible absolute inset-0 z-40 pointer-events-none flex flex-col items-center justify-between py-12 md:py-20 h-full">
+          {/* SELECTED WORKS (HORIZONTAL SCROLL) */}
+          <div className="work-ui opacity-0 invisible absolute inset-0 z-40 pointer-events-none flex flex-col justify-center h-full overflow-hidden">
+            
+            <div className="container mx-auto px-6 mb-8 md:mb-12">
+                <h2 className="text-4xl md:text-8xl text-white uppercase font-black tracking-tighter">
+                Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-indigo-500 font-editorial font-thin italic px-2">Works</span>
+                </h2>
+            </div>
 
-            <h2 className="text-4xl md:text-7xl text-white uppercase font-black tracking-tighter text-center shrink-0">
-              Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-indigo-500 font-editorial font-thin italic px-2">Works</span>
-            </h2>
-
-            <div className="relative w-[90%] md:w-150 grow flex items-center justify-center pointer-events-auto">
-              <div className="relative w-full h-75 md:h-100 flex items-center justify-center">
+            {/* HORIZONTAL TRACK */}
+            <div 
+                ref={workContainerRef}
+                className="flex gap-8 md:gap-12 px-6 md:px-24 w-max pointer-events-auto will-change-transform"
+            >
                 {projects.map((project, index) => (
                   <TiltCard
                     key={index}
-                    className={`project-card-container absolute top-0 left-0 w-full h-62.5 md:h-75 cursor-pointer translate-y-[150vh]`}
+                    className="relative w-[80vw] md:w-150 h-[50vh] md:h-[60vh] shrink-0"
                     style={{ zIndex: index + 10 }}
                   >
                       <a 
                         href={project.url}
                         target="_blank"
                         rel="noreferrer"
-                        className={`w-full h-full rounded-3xl border border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.8)] p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-blue-500/20 ${project.bg}`}
+                        className={`w-full h-full rounded-3xl border border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.8)] p-8 md:p-12 flex flex-col justify-between transition-all duration-300 hover:shadow-blue-500/20 ${project.bg}`}
                       >
                         <div className={`absolute top-0 left-0 w-full h-1 bg-linear-to-r ${project.color}`}></div>
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
-                            <p className="text-gray-400 font-mono text-sm">{project.subtitle}</p>
+                            <h3 className="text-3xl md:text-5xl font-black text-white mb-2">{project.title}</h3>
+                            <p className="text-gray-400 font-mono text-sm md:text-lg">{project.subtitle}</p>
                           </div>
-                          <span className="bg-white/10 p-3 rounded-full text-white group-hover:rotate-45 transition-transform">↗</span>
+                          <span className="bg-white/10 p-4 rounded-full text-white group-hover:rotate-45 transition-transform text-xl">↗</span>
                         </div>
                         <div className="flex gap-2">
-                          <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                          <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
-                          <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                          <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                          <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+                          <div className="h-3 w-3 rounded-full bg-green-500"></div>
                         </div>
                       </a>
                   </TiltCard>
                 ))}
-              </div>
             </div>
 
-            <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="text-sm text-gray-500 hover:text-white border-b border-transparent hover:border-white transition-colors pointer-events-auto shrink-0 mt-4">
+            <a href="https://github.com/npriyanshu" target="_blank" rel="noreferrer" className="absolute bottom-10 right-10 text-sm text-gray-500 hover:text-white border-b border-transparent hover:border-white transition-colors pointer-events-auto">
               View All Projects on GitHub
             </a>
           </div>
