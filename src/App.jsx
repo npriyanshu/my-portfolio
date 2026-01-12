@@ -35,7 +35,6 @@ function App() {
   const maskRef = useRef(null)
   const imageRef = useRef(null)
   const orbsRef = useRef(null)
-  const cursorRef = useRef(null) // Ref for the custom cursor
 
   const projects = [
     {
@@ -99,18 +98,6 @@ function App() {
   }, [])
 
   useGSAP(() => {
-    // --- NEW: BLEND MODE CURSOR LOGIC ---
-    // Moves the cursor with a slight delay for that "liquid" feel
-    const moveCursor = (e) => {
-        gsap.to(cursorRef.current, {
-            x: e.clientX,
-            y: e.clientY,
-            duration: 0.3, // The "lag" amount
-            ease: "power3.out"
-        });
-    };
-    window.addEventListener("mousemove", moveCursor);
-
     // --- INTRO ANIMATION ---
     gsap.from(".name-char", {
         yPercent: 100,
@@ -212,24 +199,15 @@ function App() {
         .to({}, { duration: 1 })
     });
 
-    return () => window.removeEventListener("mousemove", moveCursor);
-
   }, [])
 
   return (
     <>
-      {/* Import Editorial Font & Global Cursor Styles */}
+      {/* Import Editorial Font ONLY (Cursor styles removed) */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
         .font-editorial { font-family: "Playfair Display", serif; font-style: italic; }
-        body { cursor: none; } /* Hide default cursor */
       `}</style>
-
-      {/* --- CUSTOM BLEND MODE CURSOR --- */}
-      <div 
-        ref={cursorRef}
-        className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-9999 mix-blend-difference -translate-x-1/2 -translate-y-1/2 will-change-transform hidden md:block"
-      ></div>
 
       <main className="relative w-full bg-black text-white font-sans selection:bg-indigo-500 selection:text-white">
         
@@ -305,7 +283,7 @@ function App() {
             </div>
           </div>
 
-          {/* ABOUT UI - EDITORIAL FONT ADDED */}
+          {/* ABOUT UI - EDITORIAL FONT KEPT */}
           <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:justify-center md:items-start md:pl-24 md:pb-0">
             <div className="w-[90%] md:w-[45%] text-center md:text-left bg-black/40 md:bg-transparent p-6 rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
               <h2 className="text-4xl md:text-7xl font-black mb-6 leading-none">
@@ -328,19 +306,19 @@ function App() {
             </div>
           </div>
 
-          {/* SELECTED WORKS - EDITORIAL FONT ADDED */}
+          {/* SELECTED WORKS - EDITORIAL FONT KEPT */}
           <div className="work-ui opacity-0 invisible absolute inset-0 z-40 pointer-events-none flex flex-col items-center justify-between py-12 md:py-20 h-full">
 
             <h2 className="text-4xl md:text-7xl text-white uppercase font-black tracking-tighter text-center shrink-0">
               Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-indigo-500 font-editorial font-thin italic px-2">Works</span>
             </h2>
 
-            <div className="relative w-[90%] md:w-[600px] grow flex items-center justify-center pointer-events-auto">
-              <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center">
+            <div className="relative w-[90%] md:w-150 grow flex items-center justify-center pointer-events-auto">
+              <div className="relative w-full h-75 md:h-100 flex items-center justify-center">
                 {projects.map((project, index) => (
                   <TiltCard
                     key={index}
-                    className={`project-card-container absolute top-0 left-0 w-full h-[250px] md:h-[300px] cursor-pointer translate-y-[150vh]`}
+                    className={`project-card-container absolute top-0 left-0 w-full h-62.5 md:h-75 cursor-pointer translate-y-[150vh]`}
                     style={{ zIndex: index + 10 }}
                   >
                       <a 
