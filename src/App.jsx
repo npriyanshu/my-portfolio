@@ -65,12 +65,12 @@ const MagneticButton = ({ children, className, onClick }) => {
 };
 
 // --- UTILITY: Tech Logo Component ---
-const TechLogo = ({ name, url, invert = false, className = "w-8 h-8 md:w-10 md:h-10" }) => (
+const TechLogo = ({ name, url, invert = false, className = "w-[clamp(2rem,3vw,3rem)] h-[clamp(2rem,3vw,3rem)]" }) => (
   <div className="flex flex-col items-center gap-2 group cursor-pointer">
-    <div className={`p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/20 hover:border-white/30 transition-all ${invert ? "invert" : ""}`}>
+    <div className={`p-[1vw] bg-white/5 border border-white/10 rounded-xl hover:bg-white/20 hover:border-white/30 transition-all ${invert ? "invert" : ""}`}>
       <img src={url} alt={name} className={`${className} object-contain opacity-80 group-hover:opacity-100 transition-opacity`} />
     </div>
-    <span className="text-[10px] md:text-xs text-gray-500 font-mono opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
+    <span className="text-[clamp(0.6rem,1vw,0.8rem)] text-gray-500 font-mono opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
       {name}
     </span>
   </div>
@@ -366,32 +366,33 @@ function App() {
 
           {/* DASHBOARD UI */}
           {/* DASHBOARD UI */}
-          <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-10 items-center md:items-end md:justify-center md:pr-10 lg:pr-24">
-            <div className="w-[90%] md:w-auto md:max-w-2xl text-center md:text-right">
-              <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+          {/* DASHBOARD UI */}
+          <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-end md:justify-center md:pr-[5vw] lg:pr-[8vw]">
+            <div className="w-[90%] md:w-auto md:max-w-[45vw] text-center md:text-right">
+              <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-black mb-[2vh] uppercase tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                 Dev Arsenal
               </h2>
-              <div className="grid grid-cols-2 gap-3 md:gap-4 text-left">
-                <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-lg group hover:bg-white/10 transition-colors">
-                  <h3 className="text-blue-300 font-bold text-xs tracking-widest mb-4">CURRENTLY LEARNING</h3>
-                  <div className="flex flex-wrap gap-4 items-center">
+              <div className="grid grid-cols-2 gap-[1.5vw] text-left">
+                <div className="bg-white/5 backdrop-blur-md p-[2vw] rounded-2xl border border-white/10 shadow-lg group hover:bg-white/10 transition-colors">
+                  <h3 className="text-blue-300 font-bold text-[clamp(0.7rem,1vw,0.9rem)] tracking-widest mb-[1.5vh]">CURRENTLY LEARNING</h3>
+                  <div className="flex flex-wrap gap-[1vw] items-center">
                     <TechLogo name="Kafka" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apachekafka/apachekafka-original.svg" invert />
                     <div>
-                      <p className="text-sm md:text-base font-bold text-white leading-tight">Kafka & <br /> Scalable Systems</p>
+                      <p className="text-[clamp(0.8rem,1.2vw,1rem)] font-bold text-white leading-tight">Kafka & <br /> Scalable Systems</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-lg group hover:bg-white/10 transition-colors">
-                  <h3 className="text-purple-300 font-bold text-xs tracking-widest mb-2">GITHUB STATS</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl md:text-4xl font-mono text-white stat-number">450</span>
-                    <span className="text-3xl md:text-4xl font-mono text-white">+</span>
-                    <span className="text-xs text-gray-400">COMMITS (2024)</span>
+                <div className="bg-white/5 backdrop-blur-md p-[2vw] rounded-2xl border border-white/10 shadow-lg group hover:bg-white/10 transition-colors">
+                  <h3 className="text-purple-300 font-bold text-[clamp(0.7rem,1vw,0.9rem)] tracking-widest mb-[1vh]">GITHUB STATS</h3>
+                  <div className="flex items-baseline gap-[0.5vw]">
+                    <span className="text-[clamp(2rem,3vw,3rem)] font-mono text-white stat-number">450</span>
+                    <span className="text-[clamp(2rem,3vw,3rem)] font-mono text-white">+</span>
+                    <span className="text-[clamp(0.6rem,0.8vw,0.8rem)] text-gray-400">COMMITS (2024)</span>
                   </div>
                 </div>
-                <div className="col-span-2 bg-linear-to-r from-white/10 to-transparent backdrop-blur-md p-6 rounded-2xl border border-white/10">
-                  <h3 className="text-gray-400 font-bold text-xs tracking-widest mb-6">ENGINEERING ARSENAL</h3>
-                  <div className="flex gap-4 flex-wrap justify-between md:justify-start">
+                <div className="col-span-2 bg-linear-to-r from-white/10 to-transparent backdrop-blur-md p-[2vw] rounded-2xl border border-white/10">
+                  <h3 className="text-gray-400 font-bold text-[clamp(0.7rem,1vw,0.9rem)] tracking-widest mb-[2vh]">ENGINEERING ARSENAL</h3>
+                  <div className="flex gap-[1vw] flex-wrap justify-center md:justify-start">
                     <TechLogo name="Next.js" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" invert />
                     <TechLogo name="React" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" />
                     <TechLogo name="Node.js" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" />
@@ -405,7 +406,7 @@ function App() {
                     <TechLogo name="MongoDB" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" />
                     <TechLogo name="GraphQL" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" invert />
                     <TechLogo name="Git" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
-                    <TechLogo name="AWS" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" className="w-12 h-12" invert />
+                    <TechLogo name="AWS" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(2.5rem,4vw,4rem)]" invert />
                   </div>
                 </div>
               </div>
@@ -413,25 +414,24 @@ function App() {
           </div>
 
           {/* ABOUT UI */}
-          <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:items-start md:justify-center md:pl-10 lg:pl-24">
-            <div className="w-[90%] md:w-auto md:max-w-2xl text-center md:text-left bg-black/40 md:bg-transparent p-6 rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
-              <h2 className="text-4xl md:text-7xl font-black mb-6 leading-none">
+          <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-start md:justify-center md:pl-[5vw] lg:pl-[8vw]">
+            <div className="w-[90%] md:w-auto md:max-w-[50vw] text-center md:text-left bg-black/40 md:bg-transparent p-[3vw] rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
+              <h2 className="text-[clamp(2.5rem,5vw,5rem)] font-black mb-[2vh] leading-none">
                 SIMPLIFYING <br /> <span className="text-indigo-400 font-editorial">Complexity</span>
               </h2>
-              <div className="pl-4 border-l-2 border-indigo-500 mb-8">
-                <p className="text-gray-300 text-sm md:text-lg leading-relaxed mb-4">
+              <div className="pl-[2vw] border-l-2 border-indigo-500 mb-[4vh]">
+                <p className="text-gray-300 text-[clamp(0.9rem,1.2vw,1.1rem)] leading-relaxed mb-4">
                   "I focus on user experiences and efficient back-end solutions, thrive in collaboration, and explore new technologies for impactful results."
                 </p>
-                <h4 className="text-xs text-gray-500 font-mono uppercase tracking-widest mb-3">Toolkit</h4>
-                <div className="flex gap-3 mb-6">
+                <h4 className="text-[clamp(0.7rem,1vw,0.9rem)] text-gray-500 font-mono uppercase tracking-widest mb-3">Toolkit</h4>
+                <div className="flex gap-[1vw] mb-6">
                   <TechLogo name="VS Code" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" />
-                  <TechLogo name="AWS" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" className="w-10 h-10" invert />
+                  <TechLogo name="AWS" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(2.5rem,4vw,4rem)]" invert />
                   <TechLogo name="Postman" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg" />
                   <TechLogo name="Docker" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" />
                 </div>
-
-                <h4 className="text-xs text-gray-500 font-mono uppercase tracking-widest mb-3">Personal Hobbies</h4>
-                <div className="flex gap-3">
+                <h4 className="text-[clamp(0.7rem,1vw,0.9rem)] text-gray-500 font-mono uppercase tracking-widest mb-3">Personal Hobbies</h4>
+                <div className="flex gap-[1vw]">
                   <TechLogo name="Gaming" url="https://cdn-icons-png.flaticon.com/128/141/141073.png" invert />
                   <TechLogo name="Music" url="https://cdn-icons-png.flaticon.com/128/2995/2995101.png" invert />
                   <TechLogo name="Movies" url="https://cdn-icons-png.flaticon.com/128/4221/4221484.png" invert />
@@ -452,19 +452,19 @@ function App() {
 
           {/* PROCESS UI */}
           <div className="process-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center backdrop-blur-sm">
-            <h2 className="text-4xl md:text-8xl font-black text-white mb-8 md:mb-16 tracking-tighter text-center">THE PROCESS</h2>
-            <div className="flex flex-col gap-4 md:gap-8 w-[90%] max-w-4xl pointer-events-auto">
+            <h2 className="text-[clamp(2.5rem,5vw,6rem)] font-black text-white mb-[4vh] tracking-tighter text-center">THE PROCESS</h2>
+            <div className="flex flex-col gap-[2vh] w-[90%] max-w-[80vw] pointer-events-auto">
               {[
                 { id: "01", title: "Discovery", desc: "Understanding the core problem and user needs." },
                 { id: "02", title: "Architecture", desc: "Designing scalable and robust systems." },
                 { id: "03", title: "Build", desc: "Crafting clean, maintained, and efficient code." },
                 { id: "04", title: "Deploy", desc: "Shipping with CI/CD and automated monitoring." }
               ].map((step, i) => (
-                <div key={step.id} className="process-step flex items-start md:items-center gap-4 md:gap-8 p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors cursor-default">
-                  <span className="text-2xl md:text-5xl font-mono text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-indigo-500 font-bold">{step.id}</span>
+                <div key={step.id} className="process-step flex items-start md:items-center gap-[2vw] p-[2vw] bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors cursor-default">
+                  <span className="text-[clamp(1.5rem,3vw,3rem)] font-mono text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-indigo-500 font-bold">{step.id}</span>
                   <div>
-                    <h3 className="text-xl md:text-3xl font-bold text-white">{step.title}</h3>
-                    <p className="text-sm md:text-base text-gray-400 mt-1">{step.desc}</p>
+                    <h3 className="text-[clamp(1rem,1.5vw,2rem)] font-bold text-white">{step.title}</h3>
+                    <p className="text-[clamp(0.8rem,1vw,1rem)] text-gray-400 mt-1">{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -492,19 +492,19 @@ function App() {
 
           {/* TESTIMONIALS UI */}
           <div className="testimonials-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center px-4">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-12 text-center">VOUCHED BY</h2>
-            <div className="flex flex-col md:flex-row gap-6 md:gap-10 w-[90%] md:w-auto max-w-6xl pointer-events-auto">
+            <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-black text-white mb-[4vh] text-center">VOUCHED BY</h2>
+            <div className="flex flex-col md:flex-row gap-[2vw] w-[90%] md:w-auto max-w-[90vw] pointer-events-auto">
               {[
                 { name: "Sarah L.", role: "Product Manager", text: "Priyanshu transports designs into reality with pixel-perfect precision." },
                 { name: "David K.", role: "CTO, TechFlow", text: "One of the most efficient engineers I've worked with. Clean code, fast delivery." }
               ].map((t, i) => (
-                <div key={i} className="testimonial-card p-8 bg-linear-to-br from-white/10 to-transparent border border-white/5 rounded-2xl md:w-[25vw]">
-                  <p className="text-lg md:text-xl text-gray-200 italic mb-6">"{t.text}"</p>
+                <div key={i} className="testimonial-card p-[2vw] bg-linear-to-br from-white/10 to-transparent border border-white/5 rounded-2xl w-full md:w-[30vw]">
+                  <p className="text-[clamp(1rem,1.2vw,1.4rem)] text-gray-200 italic mb-[2vh]">"{t.text}"</p>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center font-bold">{t.name[0]}</div>
+                    <div className="w-[clamp(2rem,3vw,3rem)] h-[clamp(2rem,3vw,3rem)] bg-gray-600 rounded-full flex items-center justify-center font-bold text-[clamp(0.8rem,1.2vw,1.2rem)]">{t.name[0]}</div>
                     <div>
-                      <h4 className="font-bold text-white leading-tight">{t.name}</h4>
-                      <p className="text-xs text-gray-400">{t.role}</p>
+                      <h4 className="font-bold text-white leading-tight text-[clamp(0.9rem,1.2vw,1.2rem)]">{t.name}</h4>
+                      <p className="text-[clamp(0.7rem,1vw,0.9rem)] text-gray-400">{t.role}</p>
                     </div>
                   </div>
                 </div>
@@ -515,8 +515,8 @@ function App() {
           {/* SELECTED WORKS (HORIZONTAL SCROLL) */}
           <div className="work-ui opacity-0 invisible absolute inset-0 z-40 pointer-events-none flex flex-col justify-center h-full overflow-hidden">
 
-            <div className="container mx-auto px-6 mb-8 md:mb-12">
-              <h2 className="work-title text-4xl md:text-8xl text-white uppercase font-black tracking-tighter">
+            <div className="container mx-auto px-6 mb-[4vh]">
+              <h2 className="work-title text-[clamp(2.5rem,6vw,5rem)] text-white uppercase font-black tracking-tighter">
                 Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-indigo-500 font-editorial font-thin italic px-2">Works</span>
               </h2>
             </div>
