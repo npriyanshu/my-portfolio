@@ -195,13 +195,41 @@ function App() {
 
   useGSAP(() => {
     // --- INTRO ANIMATION ---
-    gsap.from(".name-char", {
+    const introTl = gsap.timeline();
+
+    // Ensure elements exist before animating
+    // 1. Reveal Title Characters
+    introTl.from(".name-char", {
       yPercent: 100,
-      duration: 1.5,
+      duration: 1.2,
       ease: "power4.out",
-      stagger: 0.1,
+      stagger: 0.05,
       delay: 0.2
-    });
+    })
+      // 2. Reveal Image
+      .from(imageRef.current, {
+        scale: 1.2,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.out"
+      }, "<0.2")
+      // 3. Reveal Status Badge
+      .fromTo(".status-badge",
+        { autoAlpha: 0, y: -20 },
+        { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
+        "-=1"
+      )
+      // 4. Expand Lines and Reveal Tagline
+      .to(".hero-line", {
+        scaleX: 1,
+        duration: 1,
+        ease: "expo.out"
+      }, "-=0.6")
+      .to(".hero-tagline", {
+        autoAlpha: 1,
+        duration: 1,
+        ease: "power2.out"
+      }, "-=0.8");
 
     const mm = gsap.matchMedia();
 
@@ -376,18 +404,28 @@ function App() {
           {/* Layer 2: HERO UI */}
           <div className="hero-title absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none p-4 mix-blend-screen will-change-transform">
             {/* Status Dot */}
-            <div className="absolute top-24 md:top-10 right-10 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 pointer-events-auto">
+            <div className="absolute top-24 md:top-10 right-10 flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 pointer-events-auto opacity-0 -translate-y-4 status-badge">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs font-mono text-green-300 uppercase tracking-wider">Available for Freelance</span>
             </div>
 
-            <h1 className="text-[13vw] md:text-[11vw] font-black uppercase leading-[0.8] text-center tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-gray-600 drop-shadow-lg">
-              Priyanshu <br /> <span className="font-editorial font-thin text-white">Negi</span>
+            <h1 className="text-[13vw] md:text-[11vw] font-black uppercase leading-[0.8] text-center tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-gray-600 drop-shadow-lg overflow-hidden">
+              <span className="inline-block overflow-hidden text-white">
+                {"Priyanshu".split("").map((char, i) => (
+                  <span key={i} className="name-char inline-block">{char}</span>
+                ))}
+              </span>
+              <br />
+              <span className="font-editorial font-thin text-white inline-block overflow-hidden">
+                {"Negi".split("").map((char, i) => (
+                  <span key={i} className="name-char inline-block">{char}</span>
+                ))}
+              </span>
             </h1>
             <div className="mt-8 flex items-center gap-4">
-              <div className="h-px w-8 md:w-16 bg-linear-to-r from-transparent to-white"></div>
-              <p className="text-xs md:text-xl font-mono tracking-[0.2em] text-blue-200 uppercase glow-text">Crafting pixel-perfect digital experiences</p>
-              <div className="h-px w-8 md:w-16 bg-linear-to-l from-transparent to-white"></div>
+              <div className="h-px w-8 md:w-16 bg-linear-to-r from-transparent to-white hero-line scale-x-0 origin-right"></div>
+              <p className="text-xs md:text-xl font-mono tracking-[0.2em] text-blue-200 uppercase glow-text hero-tagline opacity-0">Crafting pixel-perfect digital experiences</p>
+              <div className="h-px w-8 md:w-16 bg-linear-to-l from-transparent to-white hero-line scale-x-0 origin-left"></div>
             </div>
 
             {/* Location Badge */}
