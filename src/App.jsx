@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import gsap from "gsap"
 import ScrollTrigger from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
@@ -82,7 +82,31 @@ function App() {
   const maskRef = useRef(null)
   const imageRef = useRef(null)
   const orbsRef = useRef(null)
+  // Removed duplicate orbsRef declaration
   const workContainerRef = useRef(null) // NEW: Ref for the horizontal container
+
+  const [commitCount, setCommitCount] = useState(450); // Default fallback
+
+  useEffect(() => {
+    fetch('https://github-contributions-api.jogruber.de/v4/npriyanshu')
+      .then(response => response.json())
+      .then(data => {
+        // data.total[2024] or similar depending on API response structure. 
+        // The API returns { total: { "2024": 123, ... }, ... }
+        // We want the current year's commits or simply the total for the last year queried.
+        const total = Object.values(data?.total || {}).reduce((acc, count) => acc + count, 0);
+        // If it's early in the year, maybe show last year's too? 
+        // Let's stick to current year as per label "COMMITS (2025)" or just generic.
+        // Actually the label says (2024). Let's maximize it.
+        // If 2025 count is low, maybe sum them up? 
+        // For now, let's just grab the one that matches the label or update the label.
+
+        // Let's look at all totals and pick the max or current.
+        // Better yet, let's just display the total for the current year.
+        if (total > 0) setCommitCount(total);
+      })
+      .catch(err => console.error("Failed to fetch Github stats:", err));
+  }, []);
 
   const projects = [
     {
@@ -212,13 +236,9 @@ function App() {
           y: 0,
           duration: 1,
         }, "phase2")
-        .from(".stat-number", {
-          textContent: 0,
-          duration: 2,
-          ease: "power1.out",
-          snap: { textContent: 1 },
-          stagger: 0.2,
-        }, "phase2+=0.5")
+
+      // Removed conflicting stat-number animation to allow React state to show
+
 
       // --- Phase 3: Dashboard Exit -> About Enter ---
       tl.to(maskRef.current, {
@@ -385,9 +405,9 @@ function App() {
                 <div className="bg-white/5 backdrop-blur-md p-[2vw] rounded-2xl border border-white/10 shadow-lg group hover:bg-white/10 transition-colors">
                   <h3 className="text-purple-300 font-bold text-[clamp(0.7rem,1vw,0.9rem)] tracking-widest mb-[1vh]">GITHUB STATS</h3>
                   <div className="flex items-baseline gap-[0.5vw]">
-                    <span className="text-[clamp(2rem,3vw,3rem)] font-mono text-white stat-number">450</span>
+                    <span className="text-[clamp(2rem,3vw,3rem)] font-mono text-white stat-number">{commitCount}</span>
                     <span className="text-[clamp(2rem,3vw,3rem)] font-mono text-white">+</span>
-                    <span className="text-[clamp(0.6rem,0.8vw,0.8rem)] text-gray-400">COMMITS (2024)</span>
+                    <span className="text-[clamp(0.6rem,0.8vw,0.8rem)] text-gray-400">LIFETIME COMMITS</span>
                   </div>
                 </div>
                 <div className="col-span-2 bg-linear-to-r from-white/10 to-transparent backdrop-blur-md p-[2vw] rounded-2xl border border-white/10">
@@ -542,7 +562,7 @@ function App() {
                     <div className="flex justify-between items-start mb-4">
                       <div className="w-full">
                         <span className="inline-block px-3 py-1 mb-[2vh] text-[clamp(0.6rem,0.9vw,0.8rem)] font-mono font-bold tracking-widest bg-white/10 rounded-full text-white/80">{project.role}</span>
-                        <h3 className="text-[clamp(1.8rem,4vw,4rem)] font-black text-white mb-[1vh] leading-none break-words w-full">{project.title}</h3>
+                        <h3 className="text-[clamp(1.8rem,4vw,4rem)] font-black text-white mb-[1vh] leading-none break-all w-full">{project.title}</h3>
                         <p className="text-gray-400 font-medium text-[clamp(0.8rem,1.2vw,1.1rem)] leading-tight">{project.subtitle}</p>
                       </div>
                       <span className="bg-white/10 p-4 rounded-full text-white group-hover:rotate-45 transition-transform text-xl">↗</span>
