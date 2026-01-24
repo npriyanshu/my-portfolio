@@ -207,8 +207,7 @@ function App() {
       delay: 0.2
     })
       // 2. Reveal Image
-      .from(imageRef.current, {
-        scale: 1.2,
+      .from(".pose-front", {
         opacity: 0,
         duration: 1.5,
         ease: "power2.out"
@@ -247,14 +246,22 @@ function App() {
           scrub: 2,
           pin: true,
           pinSpacing: true,
+          invalidateOnRefresh: true
         },
         defaults: { ease: "power2.inOut" }
       });
 
+      // Set initial states at timeline start (will be respected on reload)
+      tl.set(".pose-front", { opacity: 1 }, 0)
+        .set([".pose-right", ".pose-left"], { opacity: 0 }, 0)
+        .set([".pose-upsidedown", ".pose-close"], { opacity: 0 }, 0)
+        .set(".pose-close", { scale: 0.8 }, 0) // Start slightly zoomed out
+        .set(".pose-upsidedown", { y: "0%" }, 0)
+
       // --- Phase 1: Hero -> Dashboard ---
       tl.to(maskRef.current, {
-        width: isMobile ? "85vw" : "30vw",
-        height: isMobile ? "85vw" : "30vw",
+        width: isMobile ? "90vw" : "35vw",
+        height: isMobile ? "90vw" : "35vw",
         borderRadius: "50%",
         scale: 0.5,
         y: isMobile ? "-30vh" : 100,
@@ -262,8 +269,10 @@ function App() {
         ease: "power3.inOut"
       }, "phase1")
         .to(bgRef.current, { backgroundColor: "#172554" }, "phase1")
-        .to(imageRef.current, { scale: 1.5, filter: "grayscale(100%)" }, "phase1")
+        // Robust Crossfade: Right fades IN, Front fades OUT slightly later
+
         .to(".hero-title", { opacity: 0, y: -100 }, "phase1")
+        .set(".pose-front", { opacity: 1 }, "phase1")
 
       // --- Phase 2: Enter Dashboard ---
       tl.to(maskRef.current, {
@@ -271,6 +280,8 @@ function App() {
         y: isMobile ? "-35vh" : 0,
         rotation: -10,
       }, "phase2")
+        .to(".pose-right", { opacity: 1 }, "phase2")
+        .to(".pose-front", { opacity: 0 }, "phase2")
         .to(".dashboard-ui", {
           autoAlpha: 1,
           y: 0,
@@ -285,7 +296,7 @@ function App() {
         x: isMobile ? 0 : "25vw",
         y: isMobile ? "-35vh" : 0,
         rotation: 10,
-        scale: 0.6,
+        scale: 0.7, // Made bigger
       }, "phase3")
         .to(bgRef.current, { backgroundColor: "#0f0f0f" }, "phase3")
         .to(".dashboard-ui", {
@@ -296,11 +307,18 @@ function App() {
           autoAlpha: 1,
           y: 0,
         }, "phase3+=0.3")
+        // Pose Change: Right -> Left
+        .to(".pose-left", { opacity: 1 }, "phase3")
+        .to(".pose-right", { opacity: 0 }, "phase3")
 
       // --- Phase 4: About Exit -> Process Enter ---
       tl.to(".about-ui", { autoAlpha: 0, y: -50 }, "phase4")
-        .to(maskRef.current, { scale: 0.4, x: 0, y: -50, rotation: 180, borderRadius: "20%" }, "phase4")
+        .to(maskRef.current, { scale: 0.4, x: 0, y: -50, rotation: 0, borderRadius: "20%" }, "phase4")
         .to(bgRef.current, { backgroundColor: "#111" }, "phase4")
+        // Pose Change: Left -> UpsideDown (Spider-Man entrance)
+        .set(".pose-upsidedown", { y: "-100%", opacity: 1 }, "phase4")
+        .to(".pose-upsidedown", { y: "0%", duration: 1.5, ease: "power2.out" }, "phase4")
+        .to(".pose-left", { opacity: 0 }, "phase4")
         .to(".process-ui", { autoAlpha: 1 }, "phase4+=0.5")
         .from(".process-step", {
           opacity: 0,
@@ -308,7 +326,7 @@ function App() {
           stagger: 0.5
         }, "phase4+=1")
 
-      // --- Phase 5: Process Exit -> Playground Enter ---
+      // --- Phase 5: Process Exit -> Testimonials Enter ---
       tl.to(".process-ui", { autoAlpha: 0, scale: 0.9 }, "phase5")
         .to(maskRef.current, {
           scale: 2,
@@ -316,17 +334,19 @@ function App() {
           borderRadius: "0%",
           width: "100%",
           height: "100%",
-          opacity: 0.1
         }, "phase5")
+        // Pose Change: UpsideDown -> Close (Zoom In Effect)
+        .to(".pose-close", { opacity: 0.4, scale: 1.1, duration: 1.5 }, "phase5")
+        .to(".pose-upsidedown", { opacity: 0 }, "phase5")
         .to(bgRef.current, { backgroundColor: "#050505" }, "phase5")
-        .to(".playground-ui", { autoAlpha: 1, y: 0 }, "phase5+=0.5")
+        .to(".testimonials-ui", { autoAlpha: 1, x: 0 }, "phase5+=0.5")
+        .fromTo(".testimonial-card",
+          { x: "100vw", opacity: 0 },
+          { x: 0, opacity: 1, stagger: 0.15, duration: 1.5, ease: "power2.out" },
+          "phase5+=0.8"
+        )
 
-      // --- Phase 6: Playground Exit -> Testimonials Enter ---
-      tl.to(".playground-ui", { autoAlpha: 0, y: -50 }, "phase6")
-        .to(".testimonials-ui", { autoAlpha: 1, x: 0 }, "phase6+=0.5")
-        .from(".testimonial-card", { x: "100vw", stagger: 0.2, duration: 2, ease: "power2.out" }, "phase6+=0.5")
-
-      // --- Phase 7: Testimonials Exit -> Work Enter ---
+      // --- Phase 6: Testimonials Exit -> Work Enter ---
       tl.to(".testimonials-ui", { autoAlpha: 0, scale: 0.8, y: -100 }, "phase7")
         .to(maskRef.current, { opacity: 0 }, "phase7") // Hide Hero Img completely
         .to(bgRef.current, { backgroundColor: "#000000" }, "phase7")
@@ -396,7 +416,19 @@ function App() {
             </div>
 
             <div ref={maskRef} className="w-full h-full overflow-hidden relative z-10 origin-center box-border shadow-2xl will-change-transform bg-gray-900">
-              <img ref={imageRef} src="/hero.png" alt="Priyanshu Negi" className="w-full h-full object-contain object-top origin-center scale-100" />
+              <img ref={imageRef} src="/me-front.png" alt="Priyanshu Front" className="pose-img pose-front absolute inset-0 w-full h-full object-contain object-top origin-center scale-125 z-10" />
+              <img src="/me-right.png" alt="Priyanshu Right" className="pose-img pose-right absolute inset-0 w-full h-full object-contain object-top origin-center scale-125 opacity-0 z-20 grayscale" />
+              <img src="/me-left.png" alt="Priyanshu Left" className="pose-img pose-left absolute inset-0 w-full h-full object-contain object-top origin-center scale-100 opacity-0 z-20 grayscale" />
+            </div>
+
+            {/* Spider-Man entrance - outside mask - centered */}
+            <div className="pose-upsidedown fixed inset-0 flex items-center justify-center opacity-0 z-30 pointer-events-none">
+              <img src="/me-upsidedown.png" alt="Priyanshu Upside Down" className="pose-img w-auto h-screen object-contain grayscale" />
+            </div>
+
+            {/* Me Close - outside mask - centered */}
+            <div className="pose-close fixed inset-0 flex items-center justify-center opacity-0 z-20 pointer-events-none">
+              <img src="/me-close.png" alt="Priyanshu Close" className="pose-img w-full md:w-[80vw] h-auto object-cover md:object-contain grayscale origin-center" />
             </div>
           </div>
 
@@ -541,42 +573,56 @@ function App() {
             </div>
           </div>
 
-          {/* PLAYGROUND UI */}
-          <div className="playground-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-10 tracking-tight">LAB / PLAYGROUND</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pointer-events-auto">
-              <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-2xl flex flex-col items-center justify-center gap-6 shadow-2xl">
-                <p className="text-gray-400 font-mono text-sm uppercase">Magnetic Interaction</p>
-                <MagneticButton className="px-8 py-4 bg-indigo-600 rounded-full text-white font-bold shadow-lg shadow-indigo-500/30">
-                  HOVER ME
-                </MagneticButton>
-              </div>
-              <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-2xl flex flex-col items-center justify-center gap-6 shadow-2xl overflow-hidden relative">
-                <p className="text-gray-400 font-mono text-sm uppercase">Glitch Effect</p>
-                <button className="px-8 py-4 border border-green-500 text-green-500 font-mono font-bold hover:bg-green-500 hover:text-black transition-all duration-100 uppercase tracking-widest relative overflow-hidden group">
-                  <span className="relative z-10">System_Check</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          {/* WHAT I BRING UI */}
+          <div className="testimonials-ui opacity-0 invisible absolute inset-0 z-40 pointer-events-none flex flex-col justify-center items-center px-6">
+            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-black text-white mb-3 text-center tracking-tighter">
+              WHAT I <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-cyan-500 font-editorial italic">Bring</span>
+            </h2>
+            <p className="text-gray-400 text-center mb-12 font-mono text-sm max-w-2xl">Value-driven development with a focus on quality and impact</p>
 
-          {/* TESTIMONIALS UI */}
-          <div className="testimonials-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center px-4">
-            <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-black text-white mb-[4vh] text-center">VOUCHED BY</h2>
-            <div className="flex flex-col md:flex-row gap-[2vw] w-[90%] md:w-auto max-w-[90vw] pointer-events-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl pointer-events-auto">
               {[
-                { name: "Sarah L.", role: "Product Manager", text: "Priyanshu transports designs into reality with pixel-perfect precision." },
-                { name: "David K.", role: "CTO, TechFlow", text: "One of the most efficient engineers I've worked with. Clean code, fast delivery." }
-              ].map((t, i) => (
-                <div key={i} className="testimonial-card p-[2vw] bg-linear-to-br from-white/10 to-transparent border border-white/5 rounded-2xl w-full md:w-[30vw]">
-                  <p className="text-[clamp(1rem,1.2vw,1.4rem)] text-gray-200 italic mb-[2vh]">"{t.text}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-[clamp(2rem,3vw,3rem)] h-[clamp(2rem,3vw,3rem)] bg-gray-600 rounded-full flex items-center justify-center font-bold text-[clamp(0.8rem,1.2vw,1.2rem)]">{t.name[0]}</div>
-                    <div>
-                      <h4 className="font-bold text-white leading-tight text-[clamp(0.9rem,1.2vw,1.2rem)]">{t.name}</h4>
-                      <p className="text-[clamp(0.7rem,1vw,0.9rem)] text-gray-400">{t.role}</p>
-                    </div>
-                  </div>
+                {
+                  icon: "⚡",
+                  title: "Performance First",
+                  desc: "Optimized code that scales. Every millisecond counts.",
+                  color: "from-yellow-500 to-orange-500"
+                },
+                {
+                  icon: "🎯",
+                  title: "Pixel Perfect",
+                  desc: "Designs brought to life with meticulous attention to detail.",
+                  color: "from-purple-500 to-pink-500"
+                },
+                {
+                  icon: "🚀",
+                  title: "Ship Fast",
+                  desc: "Rapid iteration without compromising quality or stability.",
+                  color: "from-blue-500 to-cyan-500"
+                },
+                {
+                  icon: "🔧",
+                  title: "Clean Architecture",
+                  desc: "Maintainable, scalable systems built for the long term.",
+                  color: "from-green-500 to-emerald-500"
+                },
+                {
+                  icon: "💡",
+                  title: "Problem Solver",
+                  desc: "Creative solutions to complex technical challenges.",
+                  color: "from-indigo-500 to-purple-500"
+                },
+                {
+                  icon: "🤝",
+                  title: "Team Player",
+                  desc: "Collaborative approach with clear communication.",
+                  color: "from-pink-500 to-red-500"
+                }
+              ].map((item, i) => (
+                <div key={i} className="testimonial-card group p-6 bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/30 transition-all duration-300 hover:-translate-y-2" style={{ opacity: 1 }}>
+                  <div className={`text-5xl mb-4 transition-transform duration-300 group-hover:scale-110`}>{item.icon}</div>
+                  <h3 className={`text-xl font-bold mb-2 bg-linear-to-r ${item.color} bg-clip-text text-transparent`}>{item.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
