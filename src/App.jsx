@@ -536,14 +536,14 @@ function App() {
                     href={project.url}
                     target="_blank"
                     rel="noreferrer"
-                    className={`w-full h-full rounded-3xl border border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.8)] p-8 md:p-12 flex flex-col justify-between transition-all duration-300 hover:shadow-blue-500/20 ${project.bg}`}
+                    className={`w-full h-full rounded-3xl border border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.8)] p-[3vw] flex flex-col justify-between transition-all duration-300 hover:shadow-blue-500/20 ${project.bg}`}
                   >
                     <div className={`absolute top-0 left-0 w-full h-1 bg-linear-to-r ${project.color}`}></div>
                     <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <span className="inline-block px-3 py-1 mb-3 text-xs font-mono font-bold tracking-widest bg-white/10 rounded-full text-white/80">{project.role}</span>
-                        <h3 className="text-3xl md:text-5xl font-black text-white mb-2 leading-tight">{project.title}</h3>
-                        <p className="text-gray-400 font-medium text-sm md:text-lg">{project.subtitle}</p>
+                      <div className="w-full">
+                        <span className="inline-block px-3 py-1 mb-[2vh] text-[clamp(0.6rem,0.9vw,0.8rem)] font-mono font-bold tracking-widest bg-white/10 rounded-full text-white/80">{project.role}</span>
+                        <h3 className="text-[clamp(1.8rem,4vw,4rem)] font-black text-white mb-[1vh] leading-none break-words w-full">{project.title}</h3>
+                        <p className="text-gray-400 font-medium text-[clamp(0.8rem,1.2vw,1.1rem)] leading-tight">{project.subtitle}</p>
                       </div>
                       <span className="bg-white/10 p-4 rounded-full text-white group-hover:rotate-45 transition-transform text-xl">↗</span>
                     </div>
