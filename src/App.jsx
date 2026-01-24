@@ -699,8 +699,8 @@ function App() {
 
         <div className="container mx-auto px-6 border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex gap-6 text-sm font-bold text-gray-500 uppercase tracking-widest">
-            <a href="https://linkedin.com/in/npriyanshu" target="_blank" className="hover:text-white transition-colors">LinkedIn</a>
-            <a href="https://twitter.com/npriyanshu" target="_blank" className="hover:text-white transition-colors">Twitter (X)</a>
+            {/* <a href="https://linkedin.com/in/npriyanshu" target="_blank" className="hover:text-white transition-colors">LinkedIn</a>
+            <a href="https://twitter.com/npriyanshu" target="_blank" className="hover:text-white transition-colors">Twitter (X)</a> */}
             <a href="https://github.com/npriyanshu" target="_blank" className="hover:text-white transition-colors">GitHub</a>
           </div>
 
