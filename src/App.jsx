@@ -187,10 +187,6 @@ function App() {
         defaults: { ease: "power2.inOut" }
       });
 
-      // --- INITIAL STATES ---
-      gsap.set(".dashboard-ui, .about-ui, .work-ui, .process-ui, .playground-ui, .testimonials-ui", { autoAlpha: 0 });
-      gsap.set(".stat-number", { textContent: 0 });
-
       // --- Phase 1: Hero -> Dashboard ---
       tl.to(maskRef.current, {
         width: isMobile ? "85vw" : "30vw",
@@ -211,25 +207,18 @@ function App() {
         y: isMobile ? "-35vh" : 0,
         rotation: -10,
       }, "phase2")
-        .fromTo(".dashboard-ui",
-          { autoAlpha: 0, y: 50 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 1,
-            immediateRender: false
-          },
-          "phase2")
-        .fromTo(".stat-number",
-          { textContent: 0 },
-          {
-            textContent: 450,
-            duration: 2,
-            ease: "power1.out",
-            snap: { textContent: 1 },
-            stagger: 0.2
-          },
-          "phase2+=0.5")
+        .to(".dashboard-ui", {
+          autoAlpha: 1,
+          y: 0,
+          duration: 1,
+        }, "phase2")
+        .from(".stat-number", {
+          textContent: 0,
+          duration: 2,
+          ease: "power1.out",
+          snap: { textContent: 1 },
+          stagger: 0.2,
+        }, "phase2+=0.5")
 
       // --- Phase 3: Dashboard Exit -> About Enter ---
       tl.to(maskRef.current, {
@@ -239,88 +228,81 @@ function App() {
         scale: 0.6,
       }, "phase3")
         .to(bgRef.current, { backgroundColor: "#0f0f0f" }, "phase3")
-        .fromTo(".dashboard-ui",
-          { autoAlpha: 1, y: 0 },
-          {
-            autoAlpha: 0,
-            y: isMobile ? -50 : 50,
-            immediateRender: false
-          },
-          "phase3")
-        .fromTo(".about-ui",
-          { autoAlpha: 0, y: 50 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            immediateRender: false
-          },
-          "phase3+=0.3")
+        .to(".dashboard-ui", {
+          autoAlpha: 0,
+          y: isMobile ? -50 : 50,
+        }, "phase3")
+        .to(".about-ui", {
+          autoAlpha: 1,
+          y: 0,
+        }, "phase3+=0.3")
 
+      // --- Phase 4: About Exit -> Process Enter ---
+      tl.to(".about-ui", { autoAlpha: 0, y: -50 }, "phase4")
+        .to(maskRef.current, { scale: 0.4, x: 0, y: -50, rotation: 180, borderRadius: "20%" }, "phase4")
+        .to(bgRef.current, { backgroundColor: "#111" }, "phase4")
+        .to(".process-ui", { autoAlpha: 1 }, "phase4+=0.5")
+        .from(".process-step", {
+          opacity: 0,
+          y: 20,
+          stagger: 0.5
+        }, "phase4+=1")
 
-      // --- Phase 4: About Exit -> Work Enter (HORIZONTAL SCROLL) ---
-      tl.fromTo(".about-ui",
-        { autoAlpha: 1, y: 0 },
-        { autoAlpha: 0, y: -50, duration: 0.4, immediateRender: false },
-        "phase4_start")
-        // Scale BG up to black
-        .to(maskRef.current, { scale: 50, duration: 1, opacity: 0 }, "phase4_start+=0.1")
-        .to(bgRef.current, { backgroundColor: "#000000" }, "phase4_start+=0.1")
+      // --- Phase 5: Process Exit -> Playground Enter ---
+      tl.to(".process-ui", { autoAlpha: 0, scale: 0.9 }, "phase5")
+        .to(maskRef.current, {
+          scale: 2,
+          rotation: 0,
+          borderRadius: "0%",
+          width: "100%",
+          height: "100%",
+          opacity: 0.1
+        }, "phase5")
+        .to(bgRef.current, { backgroundColor: "#050505" }, "phase5")
+        .to(".playground-ui", { autoAlpha: 1, y: 0 }, "phase5+=0.5")
 
-        // Show Work UI container
+      // --- Phase 6: Playground Exit -> Testimonials Enter ---
+      tl.to(".playground-ui", { autoAlpha: 0, y: -50 }, "phase6")
+        .to(".testimonials-ui", { autoAlpha: 1, x: 0 }, "phase6+=0.5")
+        .from(".testimonial-card", { x: "100vw", stagger: 0.2, duration: 2, ease: "power2.out" }, "phase6+=0.5")
+
+      // --- Phase 7: Testimonials Exit -> Work Enter ---
+      tl.to(".testimonials-ui", { autoAlpha: 0, scale: 0.8, y: -100 }, "phase7")
+        .to(maskRef.current, { opacity: 0 }, "phase7") // Hide Hero Img completely
+        .to(bgRef.current, { backgroundColor: "#000000" }, "phase7")
         .to(".work-ui", {
           autoAlpha: 1,
           y: 0,
-          duration: 0.5,
           pointerEvents: "all"
-        }, "phase4_start+=0.1")
-
-        // Animate the Horizontal Scroll
+        }, "phase7")
+        // Title Slam Effect
+        .from(".work-title", {
+          scale: 3,
+          opacity: 0,
+          blur: 10,
+          y: 100,
+          duration: 1,
+          ease: "expo.out"
+        }, "phase7+=0.2")
+        // Cards Staggered Pop-up
+        .from(".project-card", {
+          y: 300,
+          opacity: 0,
+          rotationX: 45,
+          scale: 0.5,
+          stagger: 0.1,
+          duration: 1.5,
+          ease: "back.out(1.2)"
+        }, "phase7+=0.5")
+        // Horizontal Scroll
         .fromTo(workContainerRef.current,
-          { x: isMobile ? "10vw" : "0vw" },
+          { x: isMobile ? "0vw" : "0vw" },
           {
             x: isMobile ? "-300vw" : "-160vw",
-            duration: 4,
-            ease: "none",
-            immediateRender: false
+            duration: 5, // Increased duration for smoother read
+            ease: "none"
           },
-          "phase4_start+=0.5")
-
-
-      // --- Phase 5: Work Exit -> Process Enter ---
-      tl.to(".work-ui", { autoAlpha: 0, y: -50, duration: 0.5 }, "phase5")
-        .to(bgRef.current, { backgroundColor: "#111" }, "phase5")
-        .to(".process-ui", { autoAlpha: 1, y: 0 }, "phase5+=0.3")
-        .fromTo(".process-step",
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.3,
-            duration: 0.6,
-            immediateRender: false
-          },
-          "phase5+=0.5")
-
-      // --- Phase 6: Process Exit -> Playground Enter ---
-      tl.to(".process-ui", { autoAlpha: 0, y: -30, duration: 0.4 }, "phase6")
-        .to(bgRef.current, { backgroundColor: "#050505" }, "phase6")
-        .to(".playground-ui", { autoAlpha: 1, y: 0, duration: 0.5 }, "phase6+=0.3")
-
-      // --- Phase 7: Playground Exit -> Testimonials Enter ---
-      tl.to(".playground-ui", { autoAlpha: 0, y: -30, duration: 0.4 }, "phase7")
-        .to(bgRef.current, { backgroundColor: "#0a0a0a" }, "phase7")
-        .to(".testimonials-ui", { autoAlpha: 1, duration: 0.5 }, "phase7+=0.3")
-        .fromTo(".testimonial-card",
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.2,
-            duration: 0.8,
-            ease: "power2.out",
-            immediateRender: false
-          },
-          "phase7+=0.5")
+          "phase7+=1.5")
     });
 
   }, [])
@@ -330,16 +312,6 @@ function App() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
         .font-editorial { font-family: "Playfair Display", serif; font-style: italic; }
-        
-        /* Hide elements that animate in with GSAP */
-        .process-step {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        .testimonial-card {
-          opacity: 0;
-          transform: translateY(50px);
-        }
       `}</style>
 
       <main className="relative w-full bg-black text-white font-sans selection:bg-indigo-500 selection:text-white">
@@ -545,7 +517,7 @@ function App() {
           <div className="work-ui opacity-0 invisible absolute inset-0 z-40 pointer-events-none flex flex-col justify-center h-full overflow-hidden">
 
             <div className="container mx-auto px-6 mb-8 md:mb-12">
-              <h2 className="text-4xl md:text-8xl text-white uppercase font-black tracking-tighter">
+              <h2 className="work-title text-4xl md:text-8xl text-white uppercase font-black tracking-tighter">
                 Selected <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-indigo-500 font-editorial font-thin italic px-2">Works</span>
               </h2>
             </div>
@@ -558,7 +530,7 @@ function App() {
               {projects.map((project, index) => (
                 <TiltCard
                   key={index}
-                  className="relative w-[80vw] md:w-150 h-[50vh] md:h-[60vh] shrink-0"
+                  className="project-card relative w-[80vw] md:w-150 h-[50vh] md:h-[60vh] shrink-0"
                   style={{ zIndex: index + 10 }}
                 >
                   <a
