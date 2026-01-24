@@ -392,7 +392,7 @@ function App() {
                 </div>
                 <div className="col-span-2 bg-linear-to-r from-white/10 to-transparent backdrop-blur-md p-[2vw] rounded-2xl border border-white/10">
                   <h3 className="text-gray-400 font-bold text-[clamp(0.7rem,1vw,0.9rem)] tracking-widest mb-[2vh]">ENGINEERING ARSENAL</h3>
-                  <div className="flex gap-4 flex-wrap justify-center md:justify-start">
+                  <div className="flex gap-[2vw] flex-wrap justify-center md:grid md:grid-cols-7 md:gap-[1vw] md:justify-items-center">
                     <TechLogo name="Next.js" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" invert />
                     <TechLogo name="React" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" />
                     <TechLogo name="Node.js" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" />
