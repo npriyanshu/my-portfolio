@@ -65,7 +65,7 @@ const MagneticButton = ({ children, className, onClick }) => {
 };
 
 // --- UTILITY: Tech Logo Component ---
-const TechLogo = ({ name, url, invert = false, className = "w-[clamp(2rem,3vw,3rem)] h-[clamp(2rem,3vw,3rem)]" }) => (
+const TechLogo = ({ name, url, invert = false, className = "w-[clamp(1.5rem,2.5vw,2.5rem)] h-[clamp(1.5rem,2.5vw,2.5rem)]" }) => (
   <div className="flex flex-col items-center gap-2 group cursor-pointer">
     <div className={`p-[1vw] bg-white/5 border border-white/10 rounded-xl hover:bg-white/20 hover:border-white/30 transition-all ${invert ? "invert" : ""}`}>
       <img src={url} alt={name} className={`${className} object-contain opacity-80 group-hover:opacity-100 transition-opacity`} />
@@ -368,7 +368,7 @@ function App() {
           {/* DASHBOARD UI */}
           {/* DASHBOARD UI */}
           <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-end md:justify-center md:pr-[5vw] lg:pr-[8vw]">
-            <div className="w-[90%] md:w-auto md:max-w-[45vw] text-center md:text-right">
+            <div className="h-screen w-[90%] md:w-auto md:max-w-[45vw] text-center md:text-right">
               <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-black mb-[2vh] uppercase tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                 Dev Arsenal
               </h2>
@@ -392,7 +392,7 @@ function App() {
                 </div>
                 <div className="col-span-2 bg-linear-to-r from-white/10 to-transparent backdrop-blur-md p-[2vw] rounded-2xl border border-white/10">
                   <h3 className="text-gray-400 font-bold text-[clamp(0.7rem,1vw,0.9rem)] tracking-widest mb-[2vh]">ENGINEERING ARSENAL</h3>
-                  <div className="flex gap-[1vw] flex-wrap justify-center md:justify-start">
+                  <div className="flex gap-4 flex-wrap justify-center md:justify-start">
                     <TechLogo name="Next.js" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" invert />
                     <TechLogo name="React" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" />
                     <TechLogo name="Node.js" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" />
@@ -406,7 +406,7 @@ function App() {
                     <TechLogo name="MongoDB" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" />
                     <TechLogo name="GraphQL" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" invert />
                     <TechLogo name="Git" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
-                    <TechLogo name="AWS" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" className="w-[clamp(2.5rem,4vw,4rem)] h-[clamp(2.5rem,4vw,4rem)]" invert />
+                    <TechLogo name="AWS" url="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" className="w-[clamp(2rem,3vw,3rem)] h-[clamp(2rem,3vw,3rem)]" invert />
                   </div>
                 </div>
               </div>
@@ -414,7 +414,7 @@ function App() {
           </div>
 
           {/* ABOUT UI */}
-          <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-start md:justify-center md:pl-[5vw] lg:pl-[8vw]">
+          <div className="h-screen about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-start md:justify-center md:pl-[5vw] lg:pl-[8vw]">
             <div className="w-[90%] md:w-auto md:max-w-[50vw] text-center md:text-left bg-black/40 md:bg-transparent p-[3vw] rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
               <h2 className="text-[clamp(2.5rem,5vw,5rem)] font-black mb-[2vh] leading-none">
                 SIMPLIFYING <br /> <span className="text-indigo-400 font-editorial">Complexity</span>
