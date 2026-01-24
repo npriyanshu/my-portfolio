@@ -321,7 +321,7 @@ function App() {
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
         </div>
 
-        <div ref={triggerRef} className="h-screen w-full relative overflow-hidden">
+        <div ref={triggerRef} className="h-screen md:h-dvh w-full relative overflow-hidden">
 
           {/* Layer 1: Background, Orbs & Mask */}
           <div ref={bgRef} className="absolute inset-0 bg-black z-0 flex items-center justify-center overflow-hidden">
@@ -366,8 +366,8 @@ function App() {
 
           {/* DASHBOARD UI */}
           {/* DASHBOARD UI */}
-          <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-10 items-center md:justify-center md:items-end md:pr-24 md:pb-0">
-            <div className="w-[90%] md:w-1/2 text-center md:text-right">
+          <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-10 items-center md:items-end md:justify-center md:pr-10 lg:pr-24">
+            <div className="w-[90%] md:w-auto md:max-w-2xl text-center md:text-right">
               <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase tracking-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                 Dev Arsenal
               </h2>
@@ -413,9 +413,8 @@ function App() {
           </div>
 
           {/* ABOUT UI */}
-          {/* ABOUT UI */}
-          <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:justify-center md:items-start md:pl-24 md:pb-0">
-            <div className="w-[90%] md:w-[45%] text-center md:text-left bg-black/40 md:bg-transparent p-6 rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
+          <div className="about-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-12 items-center md:items-start md:justify-center md:pl-10 lg:pl-24">
+            <div className="w-[90%] md:w-auto md:max-w-2xl text-center md:text-left bg-black/40 md:bg-transparent p-6 rounded-2xl backdrop-blur-xl border border-white/5 md:border-none">
               <h2 className="text-4xl md:text-7xl font-black mb-6 leading-none">
                 SIMPLIFYING <br /> <span className="text-indigo-400 font-editorial">Complexity</span>
               </h2>
@@ -453,8 +452,8 @@ function App() {
 
           {/* PROCESS UI */}
           <div className="process-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center backdrop-blur-sm">
-            <h2 className="text-4xl md:text-8xl font-black text-white mb-8 md:mb-16 tracking-tighter">THE PROCESS</h2>
-            <div className="flex flex-col gap-4 md:gap-8 w-[85%] md:w-[40%] pointer-events-auto">
+            <h2 className="text-4xl md:text-8xl font-black text-white mb-8 md:mb-16 tracking-tighter text-center">THE PROCESS</h2>
+            <div className="flex flex-col gap-4 md:gap-8 w-[90%] max-w-4xl pointer-events-auto">
               {[
                 { id: "01", title: "Discovery", desc: "Understanding the core problem and user needs." },
                 { id: "02", title: "Architecture", desc: "Designing scalable and robust systems." },
@@ -492,9 +491,9 @@ function App() {
           </div>
 
           {/* TESTIMONIALS UI */}
-          <div className="testimonials-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-12">VOUCHED BY</h2>
-            <div className="flex flex-col md:flex-row gap-6 md:gap-10 w-[90%] md:w-auto pointer-events-auto">
+          <div className="testimonials-ui opacity-0 invisible absolute inset-0 z-30 pointer-events-none flex flex-col justify-center items-center px-4">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-12 text-center">VOUCHED BY</h2>
+            <div className="flex flex-col md:flex-row gap-6 md:gap-10 w-[90%] md:w-auto max-w-6xl pointer-events-auto">
               {[
                 { name: "Sarah L.", role: "Product Manager", text: "Priyanshu transports designs into reality with pixel-perfect precision." },
                 { name: "David K.", role: "CTO, TechFlow", text: "One of the most efficient engineers I've worked with. Clean code, fast delivery." }
