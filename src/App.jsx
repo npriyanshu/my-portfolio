@@ -7,7 +7,6 @@ import Lenis from "lenis"
 gsap.registerPlugin(ScrollTrigger)
 
 // --- UTILITY: 3D Tilt Card Component ---
-// --- UTILITY: 3D Tilt Card Component ---
 const TiltCard = ({ children, className, style }) => {
   const ref = useRef(null);
 
@@ -67,7 +66,7 @@ const MagneticButton = ({ children, className, onClick }) => {
 // --- UTILITY: Tech Logo Component ---
 const TechLogo = ({ name, url, invert = false, className = "w-[clamp(1.5rem,2.5vw,2.5rem)] h-[clamp(1.5rem,2.5vw,2.5rem)]" }) => (
   <div className="flex flex-col items-center gap-2 group cursor-pointer">
-    <div className={`p-[1vw] bg-white/5 border border-white/10 rounded-xl hover:bg-white/20 hover:border-white/30 transition-all ${invert ? "invert" : ""}`}>
+    <div className={`p-[1vw] bg-white/5 border border-white/10 rounded-xl hover:bg-white/20 hover:border-white/30 transition-all duration-300 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] group-hover:scale-125 group-hover:-translate-y-2 ${invert ? "invert" : ""}`}>
       <img src={url} alt={name} className={`${className} object-contain opacity-80 group-hover:opacity-100 transition-opacity`} />
     </div>
     <span className="text-[clamp(0.6rem,1vw,0.8rem)] text-gray-500 font-mono opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
@@ -103,7 +102,20 @@ function App() {
 
         // Let's look at all totals and pick the max or current.
         // Better yet, let's just display the total for the current year.
-        if (total > 0) setCommitCount(total);
+        if (total > 0) {
+          setCommitCount(total);
+          // Animate the counter
+          gsap.fromTo(".stat-number",
+            { textContent: 0 },
+            {
+              textContent: total,
+              duration: 2.5,
+              ease: "power2.out",
+              snap: { textContent: 1 },
+              delay: 0.5
+            }
+          );
+        }
       })
       .catch(err => console.error("Failed to fetch Github stats:", err));
   }, []);
