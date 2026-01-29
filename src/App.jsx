@@ -120,43 +120,58 @@ function App() {
       .catch(err => console.error("Failed to fetch Github stats:", err));
   }, []);
 
+  // --- TECH LOGO DATA ---
+  const techData = {
+    "React": { url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+    "TailwindCSS": { url: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+    "Framer Motion": { url: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/framermotion/framermotion-original.svg" },
+    "GSAP": { url: "https://cdn.worldvectorlogo.com/logos/gsap-greensock.svg" }, // External source for GSAP
+    "Next.js": { url: "https://img.icons8.com/?size=100&id=yUdJlcKanVbh&format=png&color=000000", invert: true },
+    "Express": { url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg", invert: true },
+    "Prisma": { url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prisma/prisma-original.svg", invert: true },
+    "Konva": { url: "https://camo.githubusercontent.com/b6080d287b95d3a360090651739c2ccc2736f217285e3ff3d3084d80dee7c70d/68747470733a2f2f6b6f6e76616a732e6f72672f696d672f69636f6e2e706e67" }, // Konva Logo
+    "LiveKit": { url: "https://livekit.io/brand/LK-negative.png", invert: true, className: "w-12 h-12 md:w-16 md:h-16" }, // LiveKit Logo
+    "Shadcn UI": { url: "https://images.seeklogo.com/logo-png/51/1/shadcn-ui-logo-png_seeklogo-519786.png", className: "rounded-full" }, // Shadcn Avatar
+    "PostgreSQL": { url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" }
+  };
+
   const projects = [
     {
       title: "BraiinyBear",
-      subtitle: "EdTech Platform • Organization",
+      subtitle: "Course Catalog Portal • Interactive UI",
       role: "Lead Developer",
-      impact: "Scaled to 500+ students",
-      techStack: ["React", "Node", "MongoDB"],
+      impact: "Developed immersive frontend with GSAP & Framer Motion",
+      techStack: ["React", "TailwindCSS", "Framer Motion", "GSAP"],
       url: "https://braiinybear.org",
       color: "from-green-500 to-emerald-400",
       bg: "bg-zinc-800"
     },
     {
       title: "The Commons Voice",
-      subtitle: "News Portal • SEO • Dynamic UI",
-      role: "Frontend Architect",
-      impact: "Reduced load time by 40%",
-      techStack: ["Next.js", "Redis", "Tailwind"],
+      subtitle: "News Portal • Full Stack Integration",
+      role: "Solo Developer",
+      impact: "Built custom CMS & Authentication system",
+      techStack: ["Next.js", "Express", "Prisma", "TailwindCSS"],
       url: "https://thecommonsvoice.com",
       color: "from-purple-600 to-pink-500",
       bg: "bg-zinc-800"
     },
     {
       title: "Urbanic Pitara",
-      subtitle: "E-Commerce • Shopify/Custom",
-      role: "Full Stack Engineer",
-      impact: "Boosted sales by 25%",
-      techStack: ["Shopify", "Liquid", "React"],
+      subtitle: "E-Commerce • Custom Backend Solution",
+      role: "Solo Developer",
+      impact: "Integrated Razorpay Payments & Cloudinary",
+      techStack: ["React", "Konva", "Express", "Prisma"],
       url: "https://urbanicpitara.com",
       color: "from-orange-500 to-red-500",
       bg: "bg-zinc-900"
     },
     {
       title: "ChatterVerse",
-      subtitle: "Next.js • Real-time Voice • Prisma",
+      subtitle: "Real-time Video & Messaging Platform",
       role: "Solo Developer",
-      impact: "Real-time voice < 50ms latency",
-      techStack: ["Next.js", "WebRTC", "Prisma"],
+      impact: "Implemented LiveKit for low-latency conferencing",
+      techStack: ["Next.js", "LiveKit", "Prisma", "Shadcn UI"],
       url: "https://chatter-verse-sage.vercel.app/",
       color: "from-blue-600 to-cyan-500",
       bg: "bg-zinc-900"
@@ -467,7 +482,7 @@ function App() {
             </div>
           </div>
 
-    
+
           {/* DASHBOARD UI */}
           <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-end md:justify-center md:pr-[5vw] lg:pr-[8vw]">
             <div className="h-screen w-[90%] md:w-auto md:max-w-[45vw] text-center md:text-right">
@@ -668,10 +683,20 @@ function App() {
                       <div className="mb-6 pl-4 border-l border-white/30">
                         <p className="text-gray-300 italic text-sm md:text-base">"{project.impact}"</p>
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        {project.techStack?.map((tech) => (
-                          <span key={tech} className="px-2 py-1 text-[10px] md:text-xs border border-white/10 rounded-md text-gray-400 uppercase tracking-wider">{tech}</span>
-                        ))}
+                      <div className="flex flex-wrap gap-3 items-center">
+                        {project.techStack?.map((tech) => {
+                          const data = techData[tech];
+                          if (!data) return null; // Skip if no data
+                          return (
+                            <div key={tech} className="relative group/tech cursor-help" title={tech}>
+                              <img
+                                src={data.url}
+                                alt={tech}
+                                className={`w-6 h-6 md:w-8 md:h-8 object-contain transition-all duration-300 ${data.invert ? 'invert brightness-0 opacity-70 group-hover/tech:opacity-100' : 'opacity-80 group-hover/tech:opacity-100'} ${data.className || ''}`}
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </a>
