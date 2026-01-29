@@ -463,12 +463,11 @@ function App() {
 
             {/* Location Badge */}
             <div className="mt-6 flex items-center gap-2 opacity-60">
-              <span className="text-sm font-mono text-gray-300">Based in India 🇮🇳</span>
+              <span className="text-sm font-mono text-white">Based in India 🇮🇳</span>
             </div>
           </div>
 
-          {/* DASHBOARD UI */}
-          {/* DASHBOARD UI */}
+    
           {/* DASHBOARD UI */}
           <div className="dashboard-ui opacity-0 invisible translate-y-20 absolute inset-0 z-30 pointer-events-none flex flex-col justify-end pb-[5vh] items-center md:items-end md:justify-center md:pr-[5vw] lg:pr-[8vw]">
             <div className="h-screen w-[90%] md:w-auto md:max-w-[45vw] text-center md:text-right">
