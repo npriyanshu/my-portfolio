@@ -207,10 +207,11 @@ function App() {
       delay: 0.2
     })
       // 2. Reveal Image
-      .from(".pose-front", {
-        opacity: 0,
+      .to(".pose-front", {
+        opacity: 1,
+        scale: 1,
         duration: 1.5,
-        ease: "power2.out"
+        ease: "power4.out"
       }, "<0.2")
       // 3. Reveal Status Badge
       .fromTo(".status-badge",
@@ -272,7 +273,7 @@ function App() {
         // Robust Crossfade: Right fades IN, Front fades OUT slightly later
 
         .to(".hero-title", { opacity: 0, y: -100 }, "phase1")
-        .set(".pose-front", { opacity: 1 }, "phase1")
+        .set(".pose-front", { opacity: 0 }, "phase1")
 
       // --- Phase 2: Enter Dashboard ---
       tl.to(maskRef.current, {
