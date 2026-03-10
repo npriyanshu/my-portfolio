@@ -559,7 +559,7 @@ function App() {
                   <span>GitHub</span>
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </MagneticButton>
-                <MagneticButton className="px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-indigo-500 hover:text-white transition-colors" onClick={() => { }}>
+                <MagneticButton className="px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-indigo-500 hover:text-white transition-colors" onClick={() => window.open("/Priyanshu Negi Resume 2026.pdf", "_blank")}>
                   Resume
                 </MagneticButton>
               </div>
